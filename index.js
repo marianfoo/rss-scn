@@ -106,8 +106,9 @@ app.get('/api/messages', async (req, res) => {
     data.data.items.forEach((item) => {
       feed.item({
         title: item.subject,
-        link: 'https://community.sap.com' + item.view_href,
         description: item.search_snippet || item.body,
+        url: 'https://community.sap.com' + item.view_href,
+        link: 'https://community.sap.com' + item.view_href,
         pubDate: new Date(item.post_time).toUTCString(),
         guid: 'https://community.sap.com' + item.view_href,
         custom_elements: [
