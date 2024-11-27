@@ -78,6 +78,12 @@ try {
  *         schema:
  *           type: string
  *         description: Filter by SAP Managed Tag title
+ *       - in: query
+ *         name: feeds.replies
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *         description: Filter initial posts only (true) or show all posts including replies (false)
  *     responses:
  *       200:
  *         description: RSS feed of messages
@@ -102,7 +108,8 @@ app.get('/api/messages', async (req, res) => {
       'post_time_to',
       'min_views',
       'managedTag.id',
-      'managedTag.title'
+      'managedTag.title',
+      'feeds.replies'
     ];
     
     const hasFilter = allowedFilters.some(filter => req.query[filter]);
@@ -187,6 +194,11 @@ app.get('/api/messages', async (req, res) => {
         return;
       }
       whereClauses.push(`products.id = '${product.id}'`);
+    }
+
+    // Filtering by replies (depth=0 for initial posts only)
+    if (req.query['feeds.replies'] === 'false') {
+      whereClauses.push('depth = 0');
     }
 
     if (whereClauses.length > 0) {
