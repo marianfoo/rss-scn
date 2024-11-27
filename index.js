@@ -20,6 +20,10 @@ const swaggerOptions = {
         url: 'http://localhost:3100',
         description: 'Development server',
       },
+      {
+        url: 'https://rss-scn.marianzeis.de',
+        description: 'Production server',
+      },
     ],
   },
   apis: ['./index.js'], // files containing annotations
