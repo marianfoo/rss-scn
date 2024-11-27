@@ -1,8 +1,32 @@
 import express from 'express';
 import RSS from 'rss';
 import fs from 'fs/promises';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 
 const app = express();
+
+// Swagger configuration
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'SAP Community RSS Feed API',
+      version: '1.0.0',
+      description: 'API to generate RSS feeds from SAP Community content',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3100',
+        description: 'Development server',
+      },
+    ],
+  },
+  apis: ['./index.js'], // files containing annotations
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 const BASE_API_URL = 'https://community.sap.com/api/2.0/search';
 
@@ -16,6 +40,56 @@ try {
   process.exit(1);
 }
 
+/**
+ * @swagger
+ * /api/messages:
+ *   get:
+ *     summary: Get SAP Community messages as RSS feed
+ *     description: Retrieves messages from SAP Community and returns them in RSS format
+ *     parameters:
+ *       - in: query
+ *         name: author.id
+ *         schema:
+ *           type: string
+ *         description: Filter by author ID
+ *       - in: query
+ *         name: board.id
+ *         schema:
+ *           type: string
+ *         description: Filter by board ID
+ *       - in: query
+ *         name: subject
+ *         schema:
+ *           type: string
+ *         description: Filter by subject (partial match)
+ *       - in: query
+ *         name: conversation.style
+ *         schema:
+ *           type: string
+ *           enum: [blog, qanda]
+ *         description: Filter by conversation style
+ *       - in: query
+ *         name: managedTag.id
+ *         schema:
+ *           type: string
+ *         description: Filter by SAP Managed Tag ID
+ *       - in: query
+ *         name: managedTag.title
+ *         schema:
+ *           type: string
+ *         description: Filter by SAP Managed Tag title
+ *     responses:
+ *       200:
+ *         description: RSS feed of messages
+ *         content:
+ *           application/rss+xml:
+ *             schema:
+ *               type: string
+ *       400:
+ *         description: Invalid request parameters
+ *       500:
+ *         description: Server error
+ */
 app.get('/api/messages', async (req, res) => {
   try {
     let q =
