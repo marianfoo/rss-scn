@@ -76,18 +76,18 @@ try {
  *         name: managedTag.id
  *         schema:
  *           type: string
- *         description: Filter by SAP Managed Tag ID
+ *         description: Filter by SAP Managed Tag ID. Browse available tags at https://community.sap.com/t5/all-sap-managed-tags/ct-p/managed-tags. This is the preferred method over managedTag.title as IDs are guaranteed to be unique.
  *       - in: query
  *         name: managedTag.title
  *         schema:
  *           type: string
- *         description: Filter by SAP Managed Tag title
+ *         description: Filter by SAP Managed Tag title (not recommended as titles may not be unique). Browse available tags at https://community.sap.com/t5/all-sap-managed-tags/ct-p/managed-tags
  *       - in: query
  *         name: feeds.replies
  *         schema:
  *           type: string
  *           enum: [true, false]
- *         description: Filter initial posts only (true) or show all posts including replies (false)
+ *         description: Include all posts including replies (true) or show initial posts only (false)
  *     responses:
  *       200:
  *         description: RSS feed of messages
