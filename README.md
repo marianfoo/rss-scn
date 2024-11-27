@@ -88,3 +88,34 @@ The following secrets need to be configured in GitHub:
 ## Documentation
 
 API documentation is available through Swagger UI at [`/api-docs`](https://rss-scn.marianzeis.de/api-docs).
+
+## Scripts
+
+### Create OPML from SAP Community Following
+
+This script generates an OPML file containing RSS feeds for all the people you follow on SAP Community.
+
+#### Prerequisites
+- Node.js
+- Your SAP Community Profile ID
+
+#### Usage
+
+1. Clone the repository and install dependencies as described above
+2. Edit `create-opml-scn-following.js` and replace `yourProfileId` with your SAP Community Profile ID
+3. Run the script:
+
+```bash
+node create-opml-scn-following.js
+```
+
+The script will:
+1. Fetch all users you follow on SAP Community
+2. Generate RSS feed URLs for each follower
+3. Create an OPML file (`followers_feeds.opml`) that you can import into your RSS reader
+
+#### Finding Your Profile ID
+You can find your profile ID in one of two ways:
+- Navigate to your profile page and copy the ID from the URL:  
+  `https://profile.sap.com/profile/[your-profile-id]`
+- Go to `https://community.sap.com/t5/user/viewprofilepage/user-id/[your-user-id]`
