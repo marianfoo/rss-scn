@@ -1,9 +1,20 @@
 import express from 'express';
 import RSS from 'rss';
+import fs from 'fs/promises';
 
 const app = express();
 
 const BASE_API_URL = 'https://community.sap.com/api/2.0/search';
+
+// Load products.json on startup
+let products = [];
+try {
+  const productsData = await fs.readFile('products.json', 'utf8');
+  products = JSON.parse(productsData);
+} catch (error) {
+  console.error('Error loading products.json:', error);
+  process.exit(1);
+}
 
 app.get('/api/messages', async (req, res) => {
   try {
@@ -59,6 +70,31 @@ app.get('/api/messages', async (req, res) => {
       if (!isNaN(minViews)) {
         whereClauses.push(`metrics.views >= ${minViews}`);
       }
+    }
+
+    // Filtering by conversation style (required when using SAP Managed Tag filter)
+    if (req.query['managedTag.id'] || req.query['managedTag.title']) {
+      if (!req.query['conversation.style'] || 
+          (req.query['conversation.style'] !== 'blog' && req.query['conversation.style'] !== 'qanda')) {
+        res.status(400).send('When filtering by SAP Managed Tags, conversation.style must be either "blog" or "qanda"');
+        return;
+      }
+      const style = req.query['conversation.style'].replace(/'/g, "\\'");
+      whereClauses.push(`conversation.style = '${style}'`);
+    }
+
+    // Filtering by SAP Managed Tags
+    if (req.query['managedTag.id']) {
+      const productId = req.query['managedTag.id'].replace(/'/g, "\\'");
+      whereClauses.push(`products.id = '${productId}'`);
+    } else if (req.query['managedTag.title']) {
+      const productTitle = req.query['managedTag.title'];
+      const product = products.find(p => p.title === productTitle);
+      if (!product) {
+        res.status(400).send('SAP Managed Tag title not found');
+        return;
+      }
+      whereClauses.push(`products.id = '${product.id}'`);
     }
 
     if (whereClauses.length > 0) {
