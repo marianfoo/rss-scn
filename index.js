@@ -143,10 +143,10 @@ app.get('/api/messages', async (req, res) => {
       feed.item({
         title: item.subject,
         description: item.search_snippet || item.body,
-        url: 'https://community.sap.com' + item.view_href,
-        link: 'https://community.sap.com' + item.view_href,
+        url: item.view_href,
+        link: item.view_href,
         date: new Date(item.post_time),
-        guid: 'https://community.sap.com' + item.view_href,
+        guid: item.view_href,
         custom_elements: [
           { 'dc:creator': item.author.login },
           { 'dc:date': new Date(item.post_time).toISOString() },
