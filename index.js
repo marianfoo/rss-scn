@@ -109,7 +109,7 @@ app.get('/api/messages', async (req, res) => {
         description: item.search_snippet || item.body,
         url: 'https://community.sap.com' + item.view_href,
         link: 'https://community.sap.com' + item.view_href,
-        pubDate: new Date(item.post_time).toUTCString(),
+        date: new Date(item.post_time),
         guid: 'https://community.sap.com' + item.view_href,
         custom_elements: [
           { 'dc:creator': item.author.login },
