@@ -92,8 +92,26 @@ try {
  */
 app.get('/api/messages', async (req, res) => {
   try {
-    let q =
-      'select id, subject, view_href, search_snippet, body, post_time, author.login, author.view_href, metrics.views from messages';
+    const allowedFilters = [
+      'author.id',
+      'board.id',
+      'id',
+      'subject',
+      'conversation.style',
+      'post_time_from',
+      'post_time_to',
+      'min_views',
+      'managedTag.id',
+      'managedTag.title'
+    ];
+    
+    const hasFilter = allowedFilters.some(filter => req.query[filter]);
+    if (!hasFilter) {
+      res.status(400).send('At least one filter parameter is required');
+      return;
+    }
+
+    let q = 'select id, subject, view_href, search_snippet, body, post_time, author.login, author.view_href, metrics.views from messages';
 
     // Build the WHERE clause based on query parameters
     const whereClauses = [];
