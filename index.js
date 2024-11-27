@@ -191,7 +191,7 @@ app.get('/api/messages', async (req, res) => {
       const productId = req.query['managedTag.id'].replace(/'/g, "\\'");
       whereClauses.push(`products.id = '${productId}'`);
     } else if (req.query['managedTag.title']) {
-      const productTitle = req.query['managedTag.title'];
+      const productTitle = decodeURIComponent(req.query['managedTag.title']);
       const product = products.find(p => p.title === productTitle);
       if (!product) {
         res.status(400).send('SAP Managed Tag title not found');
