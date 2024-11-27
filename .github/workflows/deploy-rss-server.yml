@@ -1,0 +1,43 @@
+name: Deploy RSS Feed Server
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'index.js'  # Only run when index.js changes
+  workflow_dispatch:  # Enables manual trigger
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up SSH and Deploy
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e  # Exit immediately if a command exits with a non-zero status
+
+            echo "Navigating to RSS server directory..."
+            cd /root/rss-scn
+
+            echo "Pulling latest changes..."
+            git fetch --all
+            git reset --hard origin/main
+
+            echo "Installing dependencies..."
+            npm install
+
+            echo "Restarting the server..."
+            pm2 reload rss-feed-server || pm2 start index.js --name rss-feed-server
+
+            echo "Deployment complete!" 
