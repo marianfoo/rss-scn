@@ -17,13 +17,13 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3100',
-        description: 'Development server',
+        url: 'https://rss-scn.marianzeis.de',
+        description: 'Production server'
       },
       {
-        url: 'https://rss-scn.marianzeis.de',
-        description: 'Production server',
-      },
+        url: 'http://localhost:3100',
+        description: 'Development server'
+      }
     ],
   },
   apis: ['./index.js'], // files containing annotations
