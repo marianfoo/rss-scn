@@ -6,6 +6,10 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 const app = express();
 
+// Serve static files from the public directory
+// This will serve index.html from the public directory when accessing the root URL
+app.use(express.static('public'));
+
 // Swagger configuration
 const swaggerOptions = {
   definition: {

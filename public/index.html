@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAP Community RSS Feed API</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      color: #1C75BC;
+    }
+    a {
+      color: #1C75BC;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    code {
+      background-color: #f4f4f4;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    }
+    .example {
+      background-color: #f9f9f9;
+      border-left: 4px solid #1C75BC;
+      padding: 10px 15px;
+      margin: 15px 0;
+      overflow-wrap: break-word;
+    }
+    .highlight {
+      background-color: #fff8dc;
+      padding: 2px;
+    }
+    .container {
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      border-radius: 5px;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #1C75BC;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      margin: 10px 0;
+    }
+    .btn:hover {
+      background-color: #0f5a9e;
+      text-decoration: none;
+    }
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SAP Community RSS Feed API</h1>
+    <p>
+      Welcome to the SAP Community RSS Feed API. This tool allows you to create customized RSS feeds from SAP Community content,
+      bringing back the ability to follow managed tags, specific contributors, and more.
+    </p>
+    
+    <div style="text-align: center; margin: 20px 0;">
+      <a href="/api-docs/#/default/get_api_messages" class="btn">View Swagger Documentation</a>
+      <a href="https://github.com/marianfoo/rss-scn" class="btn" target="_blank">GitHub Repository</a>
+    </div>
+
+    <h2>Bringing Back RSS Feeds to the SAP Community</h2>
+    <p>
+      This tool brings back the ability to easily follow managed tags like "ABAP Development" and receive all the blog posts 
+      associated with that tag, or to follow individual contributors via RSS. The key advantage is that it doesn't rely on 
+      pre-generated feeds - instead, you can customize and generate your own feed with precision.
+    </p>
+
+    <h2>Features</h2>
+    <ul>
+      <li>Customize your RSS feeds by various parameters</li>
+      <li>Follow specific tags, authors, or content types</li>
+      <li>Include or exclude replies in your feeds</li>
+      <li>Swagger documentation available at <a href="/api-docs/#/default/get_api_messages">/api-docs</a></li>
+      <li>Automatic deployment ensures the latest updates are always live</li>
+    </ul>
+
+    <h2>Examples of Usage</h2>
+    
+    <h3>Follow the "ABAP Development" tag (blog posts only, no replies)</h3>
+    <div class="example">
+      <code>https://rss-scn.marianzeis.de/api/messages?conversation.style=blog&managedTag.title=ABAP%20Development&feeds.replies=false</code>
+    </div>
+
+    <h3>Include replies/comments in your feed</h3>
+    <div class="example">
+      <code>https://rss-scn.marianzeis.de/api/messages?conversation.style=blog&managedTag.title=ABAP%20Development&feeds.replies=true</code>
+    </div>
+
+    <h3>Follow Q&A instead of blogs</h3>
+    <div class="example">
+      <code>https://rss-scn.marianzeis.de/api/messages?conversation.style=qanda&managedTag.title=ABAP%20Development&feeds.replies=false</code>
+    </div>
+
+    <h3>Follow specific contributors</h3>
+    <div class="example">
+      <code>https://rss-scn.marianzeis.de/api/messages?author.id=53</code>
+    </div>
+
+    <h2>Using the Swagger Interface</h2>
+    <p>
+      To make it even easier, there's a <a href="/api-docs/#/default/get_api_messages">Swagger interface</a> where you can interactively build your query 
+      without worrying about the exact URL syntax. In the Swagger UI, you'll find a form where you can input your desired parameters,
+      see the exact URL to use, and even test the API directly from the browser.
+    </p>
+
+    <h2>Creating an OPML File from Your SAP Community Following</h2>
+    <p>
+      If you want to import all the people you follow on SAP Community into your RSS reader, there's a script available that 
+      generates an OPML file—a format supported by most RSS readers for bulk import of feeds.
+    </p>
+    <p>
+      You can find the script and instructions in the 
+      <a href="https://github.com/marianfoo/rss-scn" target="_blank">GitHub repository</a>.
+    </p>
+
+    <h2>How It Works</h2>
+    <p>
+      The SAP Community platform provides an API that allows access to its content. This RSS server acts as a bridge between 
+      this API and your RSS reader. When you make a request with specific parameters, it fetches the relevant content from 
+      the SAP Community API, formats it into an RSS feed, and serves it back to you.
+    </p>
+    <p>
+      You don't need to be familiar with programming to use it. Just construct the URL with the parameters you want, 
+      and your RSS reader will handle the rest.
+    </p>
+  </div>
+
+  <footer>
+    <p>Created by Marian Zeis | <a href="https://github.com/marianfoo/rss-scn" target="_blank">GitHub</a></p>
+  </footer>
+</body>
+</html> 
