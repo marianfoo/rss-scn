@@ -235,16 +235,37 @@ app.get('/api/messages', async (req, res) => {
       description: 'Latest messages from the SAP Community',
       feed_url: req.protocol + '://' + req.get('host') + req.originalUrl,
       site_url: 'https://community.sap.com',
-      language: 'en',
-      pubDate: new Date().toUTCString(),
+      language: 'en-US',
       custom_namespaces: {
         content: 'http://purl.org/rss/1.0/modules/content/',
         dc: 'http://purl.org/dc/elements/1.1/',
         rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
         taxo: 'http://purl.org/rss/1.0/modules/taxonomy/',
       },
-      custom_elements: [{ 'dc:date': new Date().toISOString() }],
+      custom_elements: [
+        { 'docs': 'https://www.rssboard.org/rss-specification' },
+        { 'ttl': '60' },
+        { 'webMaster': 'marian@marianzeis.de (Administrator)' },
+      ],
+      image_url: 'https://community.sap.com/html/@75A0878F21D09461247886DEA5121E3C/assets/favicon.ico',
     });
+
+    // Find the most recent item date to use as feed pubDate
+    let mostRecentDate = new Date(0); // Initialize with epoch time
+    if (data.data.items.length > 0) {
+      data.data.items.forEach(item => {
+        const itemDate = new Date(item.post_time);
+        if (itemDate > mostRecentDate) {
+          mostRecentDate = itemDate;
+        }
+      });
+      feed.pubDate = mostRecentDate.toUTCString();
+      feed.custom_elements.unshift({ 'dc:date': mostRecentDate.toISOString() });
+    } else {
+      // If no items, use current date
+      feed.pubDate = new Date().toUTCString();
+      feed.custom_elements.unshift({ 'dc:date': new Date().toISOString() });
+    }
 
     // Loop over the items and add them to the feed
     data.data.items.forEach((item) => {
@@ -254,10 +275,11 @@ app.get('/api/messages', async (req, res) => {
         url: item.view_href,
         link: item.view_href,
         date: new Date(item.post_time),
-        guid: item.view_href,
+        guid: item.id,
         custom_elements: [
           { 'dc:creator': item.author.login },
           { 'dc:date': new Date(item.post_time).toISOString() },
+          { 'content:encoded': { _cdata: item.body || item.search_snippet } },
         ],
       });
     });
