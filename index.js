@@ -87,6 +87,11 @@ try {
  *           type: string
  *         description: Filter by SAP Managed Tag title (not recommended as titles may not be unique). Browse available tags at https://community.sap.com/t5/all-sap-managed-tags/ct-p/managed-tags
  *       - in: query
+ *         name: min_kudos
+ *         schema:
+ *           type: integer
+ *         description: Filter by minimum kudos (likes) count
+ *       - in: query
  *         name: feeds.replies
  *         schema:
  *           type: string
@@ -115,6 +120,7 @@ app.get('/api/messages', async (req, res) => {
       'post_time_from',
       'post_time_to',
       'min_views',
+      'min_kudos',
       'managedTag.id',
       'managedTag.title',
       'feeds.replies'
@@ -176,6 +182,14 @@ app.get('/api/messages', async (req, res) => {
       const minViews = parseInt(req.query.min_views, 10);
       if (!isNaN(minViews)) {
         whereClauses.push(`metrics.views >= ${minViews}`);
+      }
+    }
+
+    // Filtering by minimum kudos (likes) count
+    if (req.query.min_kudos) {
+      const minKudos = parseInt(req.query.min_kudos, 10);
+      if (!isNaN(minKudos)) {
+        whereClauses.push(`kudos.sum(weight) >= ${minKudos}`);
       }
     }
 

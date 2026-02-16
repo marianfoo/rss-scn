@@ -36,6 +36,7 @@ Returns an RSS feed of SAP Community messages based on the provided filters.
 - `conversation.style` - Filter by type (`blog` or `qanda`)
 - `managedTag.id` - Filter by SAP Managed Tag ID
 - `managedTag.title` - Filter by SAP Managed Tag title
+- `min_kudos` - Filter by minimum kudos (likes) count
 - `feeds.replies` - Include replies (`true`/`false`)
 
 **Example:**
